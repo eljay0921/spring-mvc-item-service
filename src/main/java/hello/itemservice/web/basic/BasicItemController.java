@@ -40,4 +40,11 @@ public class BasicItemController {
         model.addAttribute("item", item);
         return "basic/item";
     }
+
+    @GetMapping("/{itemId}/edit")
+    public String itemEdit(@PathVariable long itemId, Model model) {
+        Item item = repository.findById(itemId);
+        model.addAttribute("item", item);
+        return "basic/editForm";
+    }
 }
