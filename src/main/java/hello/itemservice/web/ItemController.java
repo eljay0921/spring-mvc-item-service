@@ -1,4 +1,4 @@
-package hello.itemservice.web.basic;
+package hello.itemservice.web;
 
 import hello.itemservice.domain.item.Item;
 import hello.itemservice.domain.item.ItemRepository;
@@ -12,9 +12,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/basic/items")
+@RequestMapping("/items")
 @RequiredArgsConstructor
-public class BasicItemController {
+public class ItemController {
     private final ItemRepository repository;
 
     /**
@@ -30,41 +30,41 @@ public class BasicItemController {
     public String items(Model model) {
         List<Item> items = repository.findAll();
         model.addAttribute("items", items);
-        return "basic/items";
+        return "/items";
     }
 
     @GetMapping("/{itemId}")
     public String item(@PathVariable long itemId, Model model) {
         Item item = repository.findById(itemId);
         model.addAttribute("item", item);
-        return "basic/item";
+        return "/item";
     }
 
     @GetMapping("/{itemId}/edit")
     public String itemEdit(@PathVariable long itemId, Model model) {
         Item item = repository.findById(itemId);
         model.addAttribute("item", item);
-        return "basic/editForm";
+        return "/editForm";
     }
 
     // v1 - 내가 작성한 버전
 //    @PostMapping("/{itemId}/edit")
 //    public String edit(Item item) {
 //        repository.update(item.getId(), item);
-//        return "basic/item";
+//        return "/item";
 //    }
 
     // v2 - 강의 버전 (리다이렉션)
     @PostMapping("/{itemId}/edit")
     public String editV2(@PathVariable long itemId, @ModelAttribute Item item) {
         repository.update(itemId, item);
-        return "redirect:/basic/items/{itemId}";    // {itemId} -> @PathVariable 값을 가져와서 적용한다
+        return "redirect:/items/{itemId}";    // {itemId} -> @PathVariable 값을 가져와서 적용한다
     }
 
 
     @GetMapping("/add")
     public String addForm() {
-        return "basic/addForm";
+        return "/addForm";
     }
 
     // v1 - @RequestParam
@@ -78,28 +78,28 @@ public class BasicItemController {
 //        Item savedItem = repository.save(item);
 //
 //        model.addAttribute("item", savedItem);
-//        return "basic/item";
+//        return "/item";
 //    }
 
     // v2 - @ModelAttribute 적용 -> model.addAttribute("item", savedItem);를 자동으로 처리해 준다.
 //    @PostMapping("/add")
 //    public String save(@ModelAttribute("item") Item item, Model model) {
 //        repository.save(item);
-//        return "basic/item";
+//        return "/item";
 //    }
 
     // v3 - v2로 인해, Model 파라미터가 불필요하다.
 //    @PostMapping("/add")
 //    public String save(@ModelAttribute("item") Item item) {
 //        repository.save(item);
-//        return "basic/item";
+//        return "/item";
 //    }
 
     // v4 - @ModelAttribute의 파라미터도 생략 가능하다. (규칙=클래스 이름의 첫 문자를 소문자로 변환시킴)
 //    @PostMapping("/add")
 //    public String save(@ModelAttribute Item item) {
 //        repository.save(item);
-//        return "basic/item";
+//        return "/item";
 //    }
 
     // v5 - 최종. @ModelAttribute까지 생략한다.
@@ -107,7 +107,7 @@ public class BasicItemController {
 //    @PostMapping("/add")
 //    public String save(Item item) {
 //        repository.save(item);
-//        return "basic/item";
+//        return "/item";
 //    }
 
     // to-be) 새로고침 문제를 해결
@@ -116,7 +116,7 @@ public class BasicItemController {
 //    public String save(Item item, RedirectAttributes redirectAttributes) {
 //        repository.save(item);
 //        redirectAttributes.addAttribute("itemId", item.getId());
-//        return "redirect:/basic/items/{itemId}";
+//        return "redirect:/items/{itemId}";
 //    }
 
     // v7 - Redirect 버전 + 속성 추가
@@ -125,7 +125,7 @@ public class BasicItemController {
         repository.save(item);
         redirectAttributes.addAttribute("itemId", item.getId());
         redirectAttributes.addAttribute("status", true);
-        return "redirect:/basic/items/{itemId}";
+        return "redirect:/items/{itemId}";
     }
 
 }

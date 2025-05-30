@@ -17,7 +17,7 @@
     </div>
     <h4 class="mb-3">상품 입력</h4>
     <form action="item.html" th:action method="post">
-        <!-- th:action 값을 비워두는 것은 이것과 같다 th:action="/basic/items/add" (=현재 경로) -->
+        <!-- th:action 값을 비워두는 것은 이것과 같다 th:action="/items/add" (=현재 경로) -->
         <div>
             <label for="itemName">상품명</label>
             <input type="text" id="itemName" name="itemName" class="form-control" placeholder="이름을 입력하세요">
@@ -37,7 +37,7 @@
             </div>
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"
-                        th:onclick="|location.href='/basic/items'|"
+                        th:onclick="|location.href='/items'|"
                         onclick="location.href='items.html'" type="button">취소</button>
             </div>
         </div>
