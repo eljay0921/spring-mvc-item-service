@@ -46,6 +46,21 @@ public class BasicItemController {
         return "basic/editForm";
     }
 
+    // v1 - 내가 작성한 버전
+//    @PostMapping("/{itemId}/edit")
+//    public String edit(Item item) {
+//        repository.update(item.getId(), item);
+//        return "basic/item";
+//    }
+
+    // v2 - 강의 버전 (리다이렉션)
+    @PostMapping("/{itemId}/edit")
+    public String editV2(@PathVariable long itemId, @ModelAttribute Item item) {
+        repository.update(itemId, item);
+        return "redirect:/basic/items/{itemId}";    // {itemId} -> @PathVariable 값을 가져와서 적용한다
+    }
+
+
     @GetMapping("/add")
     public String addForm() {
         return "basic/addForm";
