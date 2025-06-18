@@ -2,7 +2,9 @@ package hello.itemservice.web.login;
 
 import hello.itemservice.domain.login.LoginService;
 import hello.itemservice.domain.member.Member;
+import hello.itemservice.web.session.SessionManager;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class LoginController {
 
     private final LoginService loginService;
+    private final SessionManager sessionManager;
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("loginForm") LoginForm loginForm) {
@@ -38,18 +41,32 @@ public class LoginController {
         }
 
         // 로그인 처리 TODO
-        // 쿠키에 시간 정보를 입력하지 않으면 세션 쿠키다
+
+        // (as-is) 쿠키 방식
+        /*
         Cookie loginCookie = new Cookie("memberId", String.valueOf(loginMember.getId()));
         response.addCookie(loginCookie);
+        */
+
+        // (to-be) (커스텀) 세션 방식
+        sessionManager.createSession(loginMember, response);
 
         return "redirect:/";
     }
 
     @PostMapping("/logout")
-    public String logout(HttpServletResponse response) {
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+
+        // (as-is)
+        /*
         Cookie loginCookie = new Cookie("memberId", null);
         loginCookie.setMaxAge(0);   // 만료(로그아웃)
         response.addCookie(loginCookie);
+        */
+
+        // (to-be)
+        sessionManager.expireSession(request);
+
         return "redirect:/";    // home으로
     }
 }
