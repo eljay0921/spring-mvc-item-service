@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Slf4j
 @Controller
@@ -37,7 +38,7 @@ public class HomeController {
     }
 
     // (to-be)
-    @GetMapping("/")
+    // @GetMapping("/")
     public String homeV2(HttpServletRequest request, Model model) {
 
         // 세션을 먼저 조회
@@ -73,5 +74,24 @@ public class HomeController {
         } else {
             return "home";
         }
+    }
+
+    // (to-be) 최종 버전
+    @GetMapping("/")
+    public String homeV3(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, Model model) {
+
+        // 세션 체크
+        if (member == null) {
+            return "home";
+        }
+
+        // 실제 회원인지 체크
+        if (memberRepository.findById(member.getId()) == null) {
+            return "home";
+        }
+
+        // 세션+회원 확인되면 로그인된 화면으로
+        model.addAttribute("member", member);
+        return "loginHome";
     }
 }
