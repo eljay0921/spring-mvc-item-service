@@ -44,4 +44,12 @@ public class LoginController {
 
         return "redirect:/";
     }
+
+    @PostMapping("/logout")
+    public String logout(HttpServletResponse response) {
+        Cookie loginCookie = new Cookie("memberId", null);
+        loginCookie.setMaxAge(0);   // 만료(로그아웃)
+        response.addCookie(loginCookie);
+        return "redirect:/";    // home으로
+    }
 }
