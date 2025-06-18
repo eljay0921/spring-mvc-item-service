@@ -2,10 +2,12 @@ package hello.itemservice.web.login;
 
 import hello.itemservice.domain.login.LoginService;
 import hello.itemservice.domain.member.Member;
+import hello.itemservice.web.SessionConst;
 import hello.itemservice.web.session.SessionManager;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +31,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletResponse response) {
+    public String login(@Valid @ModelAttribute("loginForm") LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             return "login/loginForm";
         }
@@ -49,7 +51,11 @@ public class LoginController {
         */
 
         // (to-be) (커스텀) 세션 방식
-        sessionManager.createSession(loginMember, response);
+        // sessionManager.createSession(loginMember, response);
+
+        // (to-be .v2) Servlet에서 제공하는 HttpSession 방식
+        HttpSession session = request.getSession(); // 존재하면 해당 세션, 없으면 신규 세션 반환 (default=true / false면 null 반환)
+        session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);   // 세션에 로그인 회원 정보 저장
 
         return "redirect:/";
     }
@@ -57,15 +63,21 @@ public class LoginController {
     @PostMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
 
-        // (as-is)
+        // (as-is) 쿠키 방식
         /*
         Cookie loginCookie = new Cookie("memberId", null);
         loginCookie.setMaxAge(0);   // 만료(로그아웃)
         response.addCookie(loginCookie);
         */
 
-        // (to-be)
-        sessionManager.expireSession(request);
+        // (to-be) (커스텀) 세션 방식
+        // sessionManager.expireSession(request);
+
+        // (to-be .v2) Servlet에서 제공하는 HttpSession 방식
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();   // session 데이터를 모두 제거한다.
+        }
 
         return "redirect:/";    // home으로
     }
