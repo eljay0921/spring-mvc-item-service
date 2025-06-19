@@ -17,34 +17,25 @@ import java.util.List;
 public class ItemController {
     private final ItemRepository repository;
 
-    /**
-     * 테스트용 임시 데이터
-     */
-    @PostConstruct
-    public void init() {
-        repository.save(new Item("itemA", 1000, 200));
-        repository.save(new Item("itemB", 2000, 100));
-    }
-
     @GetMapping()
     public String items(Model model) {
         List<Item> items = repository.findAll();
         model.addAttribute("items", items);
-        return "/items";
+        return "items/items";
     }
 
     @GetMapping("/{itemId}")
     public String item(@PathVariable long itemId, Model model) {
         Item item = repository.findById(itemId);
         model.addAttribute("item", item);
-        return "/item";
+        return "items/item";
     }
 
     @GetMapping("/{itemId}/edit")
     public String itemEdit(@PathVariable long itemId, Model model) {
         Item item = repository.findById(itemId);
         model.addAttribute("item", item);
-        return "/editForm";
+        return "items/editForm";
     }
 
     // v1 - 내가 작성한 버전
@@ -64,7 +55,7 @@ public class ItemController {
 
     @GetMapping("/add")
     public String addForm() {
-        return "/addForm";
+        return "items/addForm";
     }
 
     // v1 - @RequestParam

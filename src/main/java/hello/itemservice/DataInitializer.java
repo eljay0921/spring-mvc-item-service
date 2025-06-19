@@ -24,6 +24,7 @@ public class DataInitializer {
         // item
         itemRepository.save(new Item("itemA", 1000, 150));
         itemRepository.save(new Item("itemB", 3000, 50));
+        itemRepository.save(new Item("itemC", 5000, 10));
 
         // member
         Member member = new Member();
