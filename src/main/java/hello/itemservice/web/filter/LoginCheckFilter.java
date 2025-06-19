@@ -43,6 +43,7 @@ public class LoginCheckFilter implements Filter {
                     httpResponse.sendRedirect("/login?redirectURL=" + requestURI);  // 사용자가 로그인 했을 때, 다시 원래 요청했던 uri로 보내주기 위함
                     return;
                 }
+                // else는 인증 사용자이므로 pass.
             }
 
             log.info("[LoginCheckFilter] whitelist / 인증 OK");
