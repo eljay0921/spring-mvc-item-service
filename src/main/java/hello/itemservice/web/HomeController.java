@@ -2,6 +2,7 @@ package hello.itemservice.web;
 
 import hello.itemservice.domain.member.Member;
 import hello.itemservice.domain.member.MemberRepository;
+import hello.itemservice.web.argumentresolver.Login;
 import hello.itemservice.web.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -77,7 +78,7 @@ public class HomeController {
     }
 
     // (to-be) 최종 버전
-    @GetMapping("/")
+    // @GetMapping("/")
     public String homeV3(@SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member member, Model model) {
 
         // 세션 체크
@@ -91,6 +92,19 @@ public class HomeController {
         }
 
         // 세션+회원 확인되면 로그인된 화면으로
+        model.addAttribute("member", member);
+        return "loginHome";
+    }
+
+    // (to-be) 최종 버전(V3) + ArgumentResolver 적용 : V4
+    // @Login -> custom annotation
+    @GetMapping("/")
+    public String homeV4(@Login Member member, Model model) {
+
+        if (member == null) {
+            return "home";
+        }
+
         model.addAttribute("member", member);
         return "loginHome";
     }
